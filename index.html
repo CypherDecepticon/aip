@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ai practical</title>
+</head>
+
+<body>
+<pre>
+    Write a program to implement Water Jug Problem
+    from collections import deque
+
+    def water_jug(jug1_capacity, jug2_capacity, target):
+    queue = deque()
+    visited = set()
+    # Start with both jugs empty
+    queue.append((0, 0, [])) # (jug1, jug2, path)
+    while queue:
+    jug1, jug2, path = queue.popleft()
+    new_path = path + [(jug1, jug2)]
+    if jug1 == target or jug2 == target:
+    for state in new_path:
+    print(f"Jug1: {state[0]} gallons, Jug2: {state[1]} gallons")
+    print(f"Found solution: Jug1: {jug1} gallons, Jug2: {jug2} gallons")
+    return
+    if (jug1, jug2) in visited:
+    continue
+    visited.add((jug1, jug2))
+    queue.append((jug1_capacity, jug2, new_path)) # Fill jug1
+    queue.append((jug1, jug2_capacity, new_path)) # Fill jug2
+    queue.append((0, jug2, new_path)) # Empty jug1
+    queue.append((jug1, 0, new_path)) # Empty jug2
+    queue.append((jug1 - min(jug1, jug2_capacity - jug2), jug2 + min(jug1, jug2_capacity - jug2), new_path)) # Pour jug1
+    queue.append((jug1 + min(jug2, jug1_capacity - jug1), jug2 - min(jug2, jug1_capacity - jug1), new_path)) # Pour jug2
+ </pre>
+
+    <pre>
+ write a program to solve water jug problem. 2 jugs with capacity 5 gallon and 7 gallon are given with unlimited water supply
+respectively. The target to achieve is 4 gallon of water in second jug.
+j1 = int(input("Enter Jug 1 capacity: "))
+j2 = int(input("Enter Jug 2 capacity: "))
+target = int(input("Enter Target Capacity: "))
+water_jug(j1,j2, target)
+Jug1: 0 gallons, Jug2: 0 gallons
+Jug1: 0 gallons, Jug2: 7 gallons
+Jug1: 5 gallons, Jug2: 2 gallons
+Jug1: 0 gallons, Jug2: 2 gallons
+Jug1: 2 gallons, Jug2: 0 gallons
+Jug1: 2 gallons, Jug2: 7 gallons
+Jug1: 5 gallons, Jug2: 4 gallons
+Found solution: Jug1: 5 gallons, Jug2: 4 gallons
+Write a Python program to solve water jug problem. Two jugs with capacity 4 gallon and 3 gallon are given with
+unlimited water supply respectively. The target is to achieve 2 gallon of water in second jug
+j1 = int(input("Enter Jug 1 capacity: "))
+j2 = int(input("Enter Jug 2 capacity: "))
+target = int(input("Enter Target Capacity: "))
+water_jug(j1,j2, target)
+Jug1: 0 gallons, Jug2: 0 gallons
+Jug1: 0 gallons, Jug2: 3 gallons
+Jug1: 3 gallons, Jug2: 0 gallons
+Jug1: 3 gallons, Jug2: 3 gallons
+Jug1: 4 gallons, Jug2: 2 gallons
+Found solution: Jug1: 4 gallons, Jug2: 2 gallons
+Practical 8
+Write a program to implement K -Nearest Neighbor algorithm.
+Implement Knn Algorithm on Iris dataset
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score, confusion_matrix
+# Load Iris dataset
+iris = load_iris()
+x = iris.data
+y = iris.target
+
+# Split the data into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.3, random_state=23)
+
+# Create and train the k-NN model
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(x_train, y_train)
+# Make predictions
+y_pred = model.predict(x_test)
+# Evaluate the model
+cm = confusion_matrix(y_test, y_pred)
+print("Confusion Matrix:")
+print(cm)
+accuracy = accuracy_score(y_test, y_pred)
+print(f'Accuracy: {accuracy * 100:.2f}%')
+Confusion Matrix:
+[[18 0 0]
+[ 0 14 0]
+[ 0 1 12]]
+Accuracy: 97.78%
+# Example of making a prediction
+sample_data = np.array([[8.0, 3.5, 2.5, 1.2]])
+prediction = model.predict(sample_data)
+print(f'Prediction for sample data {sample_data}: {iris.target_names[prediction][0]}')
+Prediction for sample data [[8. 3.5 2.5 1.2]]: versicolor
+Practical 9
+Write a program to implement Regression algorithm.
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import r2_score
+# Features (e.g., years of experience)
+x = np.array([[1], [2], [3], [4], [5], [6], [7], [8], [9], [10]])
+# Target variable (e.g., salary)
+y = np.array([15000, 18000, 21000, 25000, 30000, 32000, 35000, 38000, 40000, 42000])
+from sklearn.model_selection import train_test_split
+x_train, x_test, y_train, y_test = train_test_split(x, y, train_size = 0.7, test_size = 0.3, random_state = 100)
+model = LinearRegression()
+model.fit(x_train, y_train)
+print(f"Regression Model : Y = {model.intercept_} + {model.coef_[0]} X")
+#Finding the value of coefficient of Determination
+y_pred = model.predict(x_test)
+print(f"R Squared : {r2_score(y_test,y_pred)}")
+Regression Model : Y = 12824.074074074073 + 3032.4074074074074 X
+R Squared : 0.9891211626103977
+xnew=np.array([[int(input("Enter years of experience :"))]])
+print(f"Predicted Salary with {xnew} years of experience = {model.predict(xnew)}")
+Predicted Salary with [[5]] years of experience = [27986.11111111]
+plt.scatter(x_test,y_test,color="blue",s=9) # Plot a graph with X_test vs y_test
+plt.plot(x_train,model.predict(x_train),color="black",linewidth=2) # Regressior line showing
+plt.title('Regression(Test Set)')
+plt.xlabel('Years of Experience')
+plt.ylabel('Salary')
+plt.show()
+
+
+PRAC 5
+Write a program to implement Breadth First Search Traversal
+Write a Python program to implement Breadth First Search algorithm.
+Refer the following graph as an Input for the program (initial node=1,
+Goal node=8)
+
+def bfs(graph, start, goal):
+visited = set()
+queue = [(start, [start])]
+while queue:
+current_node, path = queue.pop(0)
+if current_node == goal:
+return path
+if current_node not in visited:
+visited.add(current_node)
+for neighbor in graph[current_node]:
+if neighbor not in visited:
+queue.append((neighbor, path + [neighbor]))
+return None
+# Example usage
+graph = {
+1: [2, 3],
+2: [4, 5],
+3: [6, 7],
+4: [8],
+5: [8],
+6: [8],
+7: [8],
+8: []
+}
+print("BFS Path:", bfs(graph, 1, 8))
+
+PRAC 6
+Write a program to implement Depth First Search Traversal
+Write a Python program to implement Depth First Search algorithm. Refer the following
+graph as an Input for the program.[Initial node=1,Goal node=8]
+def dfs(graph, start, goal):
+stack = [(start, [start])]
+while stack:
+(vertex, path) = stack.pop()
+if vertex == goal:
+return path
+for neighbor in graph[vertex]:
+if neighbor not in path:
+stack.append((neighbor, path + [neighbor]))
+# Example usage
+graph = {
+1: [2, 3],
+2: [4, 5],
+3: [6, 7],
+4: [8],
+5: [8],
+6: [8],
+7: [8],
+8: []
+}
+print("DFS Path:", dfs(graph, 1, 8))
+
+PRAC7
+Write a Python program to implement Breadth First Search algorithm. Refer the following
+graph as an Input for the program (initial node=1, Goal node=8)
+
+graph = {
+    1: [2, 4],
+    2: [3],
+    3: [4,5,6],
+    4: [2],
+    5: [7,8],
+    6: [8],
+    7: [8],
+    8: []
+    }
+    print("BFS Path:", bfs(graph, 1, 8))
+
+    print("DFS Path:", dfs(graph, 1, 8))
+
+    graph = {
+        1: [2, 3, 4],
+        2: [4, 5],
+        3: [4],
+        4: [7],
+        5: [6, 7],
+        6: [7],
+        7: []
+        }
+        print("BFS Path:", bfs(graph, 1, 7))
+
+        print("DFS Path:", dfs(graph, 1, 7))
+
+
+        PRACTICAL 2
+        Write a program to implement
+        List Operations : Nested list,Length, Concatenation, Membership, Iteration,
+        Indexing and Slicing.
+        List methods : Add, Extend & Delete.
+        In [1]:
+        #List Operations
+        def list_operations():
+        # Taking user input for list elements
+        print("Enter list elements seperated by spaces")
+        a1 = input("Enter list 1 : ").split()
+        a2 = input("Enter list 2 : ").split()
+        # Nested list
+        nested_list = [a1, a2]
+        print("Nested List:", nested_list)
+        # Length of lists
+        print("Length of List1:", len(a1))
+        print("Length of List2:", len(a2))
+        # Concatenation of lists
+        concatenated_list = a1 + a2
+        print("Concatenated List:", concatenated_list)
+        # Membership test
+        element = input("Enter an element to check membership in List1: ")
+        print(f"Is '{element}' in List1?", element in a1)
+        # Iteration over a list
+        print("Elements in List1:")
+        for item in a1:
+        print(item)
+        # Indexing
+        index = int(input(f"Enter an index (0 to {len(a1)-1}) to access in List1: "))
+        print(f"Element at index {index} in List1:", a1[index])
+        # Slicing
+        start = int(input("Enter the start index for slicing List1: "))
+        end = int(input("Enter the end index for slicing List1: "))
+        print(f"Sliced List1 from index {start} to {end}:", a1[start:end])
+        list_operations()
+        
+
+        Enter list elements seperated by spaces
+        Enter list 1 : 1 2 3 4
+        Enter list 2 : 5 6 7 8
+        Nested List: [['1', '2', '3', '4'], ['5', '6', '7', '8']]
+        Length of List1: 4
+        Length of List2: 4
+        Concatenated List: ['1', '2', '3', '4', '5', '6', '7', '8']
+        Enter an element to check membership in List1: 5
+        Is '5' in List1? False
+        Elements in List1:
+        1
+        2
+        3
+        4
+        Enter an index (0 to 3) to access in List1: 2
+        Element at index 2 in List1: 3
+        Enter the start index for slicing List1: 1
+        Enter the end index for slicing List1: 2
+        Sliced List1 from index 1 to 2: ['2']
+        
+        Enter list elements seperated by spaces
+        Enter list 1 : 1 2 3 4 5 6
+        Enter one element to add to the list: 7
+        List after adding element: ['1', '2', '3', '4', '5', '6', '7']
+        Enter elements to extend the list : 8 9 10
+        List after extending: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
+        Enter an element to delete from the list: 11
+        Element '11' not found in the list.
+        
+        PRACTICAL 3
+        Write a program to Illustrate Different Set Operations.
+        In [2]:
+        # list methods: add, extend, delete
+        def list_methods():
+        print("Enter list elements seperated by spaces")
+        a1 = input("Enter list 1 : ").split()
+        # Add (Adds single number at the end)
+        add = input("Enter one element to add to the list: ")
+        a1.append(add)
+        print("List after adding element:", a1)
+        # Extend (Adds multiple elements at the end)
+        extend = input("Enter elements to extend the list : ").split()
+        a1.extend(extend)
+        print("List after extending:", a1)
+        # Delete
+        delete = input("Enter an element to delete from the list: ")
+        if delete in a1:
+        a1.remove(delete)
+        print("List after deleting element:", a1)
+        else:
+        print(f"Element '{delete}' not found in the list.")
+        list_methods()
+        
+        
+        In [6]:
+        def set_operations():
+        print("Enter set elements seperated by spaces")
+        set1 = set(input("Enter set 1: ").split())
+        set2 = set(input("Enter set 2: ").split())
+        # Union
+        union = set1 | set2
+        print("Union of Set1 and Set2:", union)
+        # Intersection
+        intersection = set1 & set2
+        print("Intersection of Set1 and Set2:", intersection)
+        # Difference
+        difference = set1 - set2
+        print("Difference of Set1 and Set2:", difference)
+        # Symmetric Difference element which is not common
+        sm = set1 ^ set2
+        print("Symmetric Difference of Set1 and Set2:", sm)
+        # Membership test
+        element = input("Enter an element to check membership in Set1: ")
+        print(f"Is '{element}' in Set1?", element in set1)
+        # Adding an element to Set1
+        add = input("Enter an element to add to Set1: ")
+        set1.add(add)
+        print("Set1 after adding element:", set1)
+        # Removing an element from Set1
+        
+        
+        Enter set elements seperated by spaces
+        Enter set 1: 1 2 3
+        Enter set 2: 3 4 5
+        Union of Set1 and Set2: {'5', '4', '1', '2', '3'}
+        Intersection of Set1 and Set2: {'3'}
+        Difference of Set1 and Set2: {'2', '1'}
+        Symmetric Difference of Set1 and Set2: {'5', '1', '2', '4'}
+        Enter an element to check membership in Set1: 3
+        Is '3' in Set1? True
+        Enter an element to add to Set1: 0
+        Set1 after adding element: {'2', '0', '1', '3'}
+        Enter an element to remove from Set1: 3
+        Set1 after removing element: {'2', '0', '1'}
+ PRACTICAL 4
+Write a program to implement Simple Chatbot.
+
+def chatbot():
+print("Hello! I am a simple chatbot. How can I help you today?")
+while True:
+user_input = input("You: ").lower()
+if "hello" in user_input or "hi" in user_input:
+print("Chatbot: Hello! How can I assist you?")
+elif "how are you" in user_input:
+print("Chatbot: I'm just a bunch of code, but I'm here to help you!")
+elif "your name" in user_input:
+print("Chatbot: I am a simple chatbot created by AI.")
+elif "bye" in user_input or "exit" in user_input:
+print("Chatbot: Goodbye! Have a nice day!")
+break
+else:
+print("Chatbot: I'm sorry, I don't understand that. Can you please repeat
+chatbot()
+ 
+       
+</pre>
+</body>
+
+</html>
